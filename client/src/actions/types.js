@@ -1,0 +1,3 @@
+// FORECAST ACTIONS
+export const SET_UK_MAP = 'SET_UK_MAP';
+export const SET_UK_FORECAST = 'SET_UK_FORECAST';
