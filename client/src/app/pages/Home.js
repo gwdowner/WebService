@@ -21,9 +21,7 @@ class Home extends Component {
                 forecast: [],
                 lastUpdated: ''
             },
-
         };
-
     }
 
     componentDidMount() {
@@ -54,7 +52,6 @@ class Home extends Component {
             })
         }
     };
-
 
     // we should load in the forecast data here as it can be used by multiple resources.
     render() {
