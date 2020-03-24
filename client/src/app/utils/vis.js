@@ -10,7 +10,7 @@ export default class Vis extends Component{
         this.props.draw(this.props.props);
     }
 
-    shouldComponentUpdate(){
+    shouldComponentUpdate(nextProps){
         return false;
     }
 

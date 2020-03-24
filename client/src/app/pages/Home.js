@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
-
-import MapVisual from '../components/MapVisual';
-import axios from 'axios';
 import dateformat from 'dateformat';
+
+// components
+import MapVisual from '../components/MapVisual';
+
+// Dependancy injection
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { updateState } from '../utils/stateUtils';
+import { getMapGeoJson } from '../../actions/forecastActions';
 
 class Home extends Component {
 
@@ -10,20 +16,24 @@ class Home extends Component {
         super();
         this.state = {
             ...this.defaultSelectedState,
-            forecast: [],
-            lastUpdated: new Date()
+            forecast: {
+                map: {},
+                forecast: [],
+                lastUpdated: ''
+            },
+
         };
-        this.loadData();
+
     }
 
-    loadData() {
-        axios.get('/data.json').then(res => {
+    componentDidMount() {
+        if (!this.props.forecast.map) {
+            this.props.getMapGeoJson();
+        }
+    }
 
-            this.setState({
-                forecast: res.data,
-                lastUpdated: new Date()
-            });
-        });
+    componentDidUpdate() {
+        updateState(this);
     }
 
     defaultSelectedState = {
@@ -32,7 +42,7 @@ class Home extends Component {
     }
 
     countyCallback = (selectedCounty) => {
-        console.log(selectedCounty);
+
         if (selectedCounty) {
             this.setState({
                 selectedName: selectedCounty.properties.ShortName,
@@ -48,8 +58,8 @@ class Home extends Component {
 
     // we should load in the forecast data here as it can be used by multiple resources.
     render() {
-        const output = this.state.forecast.find(x => x.code === this.state.selectedId)?.value;
-
+        const output = this.state.forecast.forecast.find(x => x.code === this.state.selectedId)?.value;
+        const lastUpdated = this.state.forecast.lastUpdated !== '' ? dateformat(this.state.forecast.lastUpdated, 'dd-mm-yy hh:MM TT') : 'unknown';
 
         return (
             <div className='container-fluid'>
@@ -71,7 +81,7 @@ class Home extends Component {
                             <p>Today is green</p>
                         </div>
                         <div className='my-3'>
-                            <p> last updated: {dateformat(this.state.lastUpdated, 'dd-mm-yy hh:mm TT')}</p>
+                            <p> last updated: {lastUpdated}</p>
                         </div>
 
                         <div className='my-4'>
@@ -90,5 +100,12 @@ class Home extends Component {
         );
     }
 }
-
-export default Home
+Home.propTypes = {
+    getMapGeoJson: PropTypes.func.isRequired
+};
+const mapStateToProps = state => ({
+    forecast: state.forecast
+});
+export default connect(
+    mapStateToProps, { getMapGeoJson }
+)(Home);

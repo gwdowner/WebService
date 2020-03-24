@@ -4,8 +4,9 @@ import {
 } from '../actions/types';
 
 const initialState = {
-    
-
+    forecast:null,
+    map:null,
+    lastUpdated:null
 };
 
 export default function (state = initialState, action) {
@@ -13,7 +14,8 @@ export default function (state = initialState, action) {
         case SET_UK_FORECAST:
             return {
                 ...state,
-                forecast:action.payload
+                forecast:action.payload,
+                lastUpdated: new Date()
             };
         case SET_UK_MAP:
             return {
