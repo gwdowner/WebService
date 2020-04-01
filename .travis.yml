@@ -8,6 +8,7 @@ install:
   - npm build
   - docker build -t gwdowner/webservice:latest .
   - docker images
+  - npm install
 script:
   - npm run coveralls
 deploy:
