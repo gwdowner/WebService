@@ -1,0 +1,18 @@
+language: node_js
+node_js: 
+  - lts/*
+services:
+  - docker
+install:
+  - ls
+  - npm build
+  - docker build -t gwdowner/webservice:latest .
+  - docker images
+script:
+  - npm run coveralls
+deploy:
+  provider: script
+  script: bash docker_push
+  on:
+    branch: master
+
