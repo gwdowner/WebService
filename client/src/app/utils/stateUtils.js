@@ -7,7 +7,6 @@ export const updateState = (component) => {
 
     let updatedState = {};
     for (let item in state) {
-
         if (props[item] && !lodash.isEqual(state[item], props[item])) {
             updatedState[item] = props[item]
         }

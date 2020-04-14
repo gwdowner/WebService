@@ -1,0 +1,47 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "webservice"
+  namespace: "default"
+  labels:
+    app: "webservice"
+spec:
+  replicas: 3
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: "webservice"
+  template:
+    metadata:
+      labels:
+        app: "webservice"
+    spec:
+      containers:
+      - name: "webservice"
+        image: "gwdowner/webservice:latest"
+        imagePullPolicy: Always
+---
+apiVersion: "autoscaling/v2beta1"
+kind: "HorizontalPodAutoscaler"
+metadata:
+  name: "webservice-hpa-trpt"
+  namespace: "default"
+  labels:
+    app: "webservice"
+spec:
+  scaleTargetRef:
+    kind: "Deployment"
+    name: "webservice"
+    apiVersion: "apps/v1"
+  minReplicas: 2
+  maxReplicas: 20
+  metrics:
+  - type: "Resource"
+    resource:
+      name: "cpu"
+      targetAverageUtilization: 80

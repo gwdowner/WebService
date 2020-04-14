@@ -1,4 +1,11 @@
 import * as d3 from 'd3';
+import moment from 'moment';
+
+const colour = d3
+    .scaleThreshold()
+    .domain([10, 25, 50, 100, 250, 500, 1000, 2000, 3000])
+    .range(d3.schemeGreens[9]);
+
 
 function AffineTransformation(a, b, c, d, tx, ty) {
     return {
@@ -29,7 +36,11 @@ function mouseOverFactory(callback) {
             .style("opacity", 1)
             .style("stroke", "white");
 
-        callback(d);
+        let res = {
+            type: 'SELECTED_COUNTY',
+            payload: d
+        }
+        callback(res);
     }
 
     return mouseOver
@@ -46,14 +57,21 @@ function mouseLeaveFactory(callback) {
             .transition()
             .duration(1)
             .style("opacity", .8);
-        callback(null);
+
+        let res = {
+            type: 'SELECTED_COUNTY',
+            payload: null
+        }
+        callback(res);
+
     }
 
     return mouseLeave;
 }
 
-function draw(props) {
-    let { mapJson, element, callback } = props;
+async function draw(props) {
+    let { mapJson, element, callback, data } = props;
+
     // as the map data is not in standard spherical coordinates we have to
     // implement our own projection and scaling functions
     const elementId = `#${element}`;
@@ -77,6 +95,8 @@ function draw(props) {
 
     path.projection(AffineTransformation(scale, 0, 0, -scale, x_offset, y_offset));
 
+    d3.select(elementId).select('svg').remove();
+
     let selection = d3
         .select(elementId)
         .append('svg')
@@ -92,10 +112,36 @@ function draw(props) {
         .attr('class', 'county')
         .style("opacity", .8)
         .style("stroke", "white")
-        .style('fill', 'green')
+        .style('fill', d => {
+            return colour(data.find(x => x.region === d.properties.GSPGroupID).forecast[0]?.solarMW) ?? 'black';
+        })
         .style("stroke-width", 0.5)
         .on("mouseover", mouseOverFactory(callback))
         .on("mouseleave", mouseLeaveFactory(callback));
+
+    callback({
+        type: 'REGISTER_TIME_LISTENER',
+        payload: updateFactory(selection, data)
+    });
+
 };
+
+function updateFactory(selection, data) {
+
+    return (date, duration) => {
+        
+        selection.enter()
+            .selectAll('path')
+            .transition()
+            .duration(duration)
+            .style('fill', d => {
+                let group = data.find(x => x.region === d.properties.GSPGroupID);
+                let val = group.forecast.find(x => moment( new Date(x.time)).isSame(date))?.solarMW;
+                return colour(val)
+                    ?? 'black';
+            });
+    }
+
+}
 
 export default draw;

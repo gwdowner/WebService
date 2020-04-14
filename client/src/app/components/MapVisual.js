@@ -36,9 +36,11 @@ class MapVisual extends Component {
     }
 
     render() {
-        var uk = this.state.forecast.map;
+        let forecast = this.state.forecast;
+        var uk = forecast.map;
+        let data = forecast.forecast;
 
-        if (!uk?.features)
+        if (!uk?.features || !data)
             return (
                 <div>
                     No Map found!
@@ -47,7 +49,8 @@ class MapVisual extends Component {
         let props = {
             mapJson: uk,
             element: 'mapVis',
-            callback: this.props.callback
+            callback: this.props.callback,
+            data : data
         };
 
         return (<Vis draw={draw} props={props} />);

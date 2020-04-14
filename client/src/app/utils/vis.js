@@ -11,7 +11,7 @@ export default class Vis extends Component{
     }
 
     shouldComponentUpdate(nextProps){
-        return false;
+        return true;
     }
 
     render(){

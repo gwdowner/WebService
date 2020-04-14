@@ -10,13 +10,14 @@ export const getForecast = () => dispatch => {
     if (!gettingForecast) {
         gettingForecast = true;
         axios
-            //.get('/api/latestforecast')
-            .get('/data.json')
+            .get('/api/forecast')
             .then(res => {
+                
                 if (res.status === 200) {
+                   
                     dispatch({
                         type: SET_UK_FORECAST,
-                        payload: res.data,
+                        payload: res.data.prediction,
                     });
                 }
 
