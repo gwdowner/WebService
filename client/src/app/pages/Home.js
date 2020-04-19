@@ -170,7 +170,7 @@ class Home extends Component {
             <>
                 <div className='container-fluid'>
                     <Header class='vh-100'/>
-                    <div className="row py-3 border-bottom border-white">
+                    <div className="row py-3 border-bottom border-white main">
                         <div className='col-lg-4'>
                             <div className='d-flex flex-column h-100'>
                                 <div className='container-fluid'>

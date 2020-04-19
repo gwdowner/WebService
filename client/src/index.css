@@ -1,5 +1,8 @@
 body {
-  background-color: #232e36;
+  background-color: #f2a365;
+  background-image: url('./app/assets/darkTurbines.jpg');
+  background-attachment:fixed;
+  background-position: 50% 65%; 
   color: white;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -7,6 +10,10 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.main {
+  background-color: #232e36;
 }
 
 code {
@@ -60,11 +67,6 @@ code {
 }
 .logoWhite {
   color: white;
-}
-
-.header {
-  background-color: #f2a365;
-  background-position: 50% 65%;
 }
 
 .rotate {
