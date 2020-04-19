@@ -6,6 +6,7 @@ metadata:
   namespace: "default"
   labels:
     app: "webservice"
+    ver: "2"
 spec:
   replicas: 3
   strategy:
@@ -24,6 +25,9 @@ spec:
       containers:
       - name: "webservice"
         image: "gwdowner/webservice:latest"
+        envFrom:
+          - secretRef:
+              name: webservice
         imagePullPolicy: Always
 ---
 apiVersion: "autoscaling/v2beta1"

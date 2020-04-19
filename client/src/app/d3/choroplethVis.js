@@ -1,11 +1,12 @@
 import * as d3 from 'd3';
 import moment from 'moment';
+import dataUtils from '../utils/dataUtils';
 
-const colour = d3
-    .scaleThreshold()
-    .domain([10, 25, 50, 100, 250, 500, 1000, 2000, 3000])
-    .range(d3.schemeGreens[9]);
+const colourFactory = (domain) => d3
+    .scaleLinear().domain(domain)
+    .range(['#99e699', '#33cc33']);
 
+let colour = colourFactory(0, 4000);
 
 function AffineTransformation(a, b, c, d, tx, ty) {
     return {
@@ -38,7 +39,7 @@ function mouseOverFactory(callback) {
 
         let res = {
             type: 'SELECTED_COUNTY',
-            payload: d
+            payload: d.properties.GSPGroupID
         }
         callback(res);
     }
@@ -93,6 +94,9 @@ async function draw(props) {
     const y_offset = (maxy * scale);
     const x_offset = -(minx * scale);
 
+    let domain = d3.extent(dataUtils.getAllValues(data), d=> d.solarMW);
+    colour = colourFactory(domain);
+
     path.projection(AffineTransformation(scale, 0, 0, -scale, x_offset, y_offset));
 
     d3.select(elementId).select('svg').remove();
@@ -129,14 +133,14 @@ async function draw(props) {
 function updateFactory(selection, data) {
 
     return (date, duration) => {
-        
+
         selection.enter()
             .selectAll('path')
             .transition()
             .duration(duration)
             .style('fill', d => {
                 let group = data.find(x => x.region === d.properties.GSPGroupID);
-                let val = group.forecast.find(x => moment( new Date(x.time)).isSame(date))?.solarMW;
+                let val = group.forecast.find(x => moment(new Date(x.time)).isSame(date))?.solarMW;
                 return colour(val)
                     ?? 'black';
             });

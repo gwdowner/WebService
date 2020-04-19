@@ -2,8 +2,13 @@ import React, { Component } from 'react';
 import dateformat from 'dateformat';
 import dataUtils from '../utils/dataUtils';
 import moment from 'moment';
+import strings from '../../strings';
+
 // components
 import MapVisual from '../components/MapVisual';
+import MultiLineGraph from '../components/MultiLineVisual';
+import Footer from '../components/Footer';
+import Header from '../components/Header';
 
 // Dependancy injection
 import PropTypes from 'prop-types';
@@ -40,16 +45,15 @@ class Home extends Component {
 
     componentDidUpdate(prevProps, prevState) {
         updateState(this);
-        
+
         if (this.state.selectedTime === null && this.state.forecast?.forecast?.length > 0) {
             let startTime = dataUtils.getStart(this.state.forecast.forecast).subtract(1, 'hour');
             let endTime = dataUtils.getEnd(this.state.forecast.forecast);
-            console.log(startTime.format(this.dateformat));
-            console.log(endTime.format(this.dateformat));
+
             this.setState({
                 selectedTime: startTime.clone(),
                 endTime: endTime,
-                startTime:startTime
+                startTime: startTime
             });
             this.startAnimation(true);
         }
@@ -58,14 +62,14 @@ class Home extends Component {
 
     resetAnimation() {
         let startTime = dataUtils.getStart(this.state.forecast?.forecast).subtract(1, 'hour');;
-    
+
         let prevStateAutoplay = this.state.isAutoplay;
-        
+
         this.setState({
             isAutoplay: true,
             selectedTime: startTime
         }, () => {
-            
+
             if (!prevStateAutoplay)
                 this.startAnimation(true);
         });
@@ -76,18 +80,18 @@ class Home extends Component {
 
         const timeout = 750;
         if ((this.state.isAutoplay || forceRestart) && this.state.selectedTime) {
-            
+
             var nextTime = this.state.selectedTime.add(1, 'hour');
-            
-            if(nextTime.isAfter(this.state.endTime)){
+
+            if (nextTime.isAfter(this.state.endTime)) {
                 nextTime = this.state.startTime.clone();
             }
-               
+
             this.publish({
                 type: 'SET_TIME',
                 payload: { time: nextTime, duration: timeout }
             });
-            
+
             this.setState({
                 selectedTime: nextTime,
             });
@@ -142,8 +146,8 @@ class Home extends Component {
 
         if (selectedCounty) {
             this.setState({
-                selectedName: selectedCounty.properties.ShortName,
-                selectedId: selectedCounty.properties.GSPGroupID
+                selectedId: selectedCounty,
+                selectedName: this.getRegionName(selectedCounty)
             });
         } else {
             this.setState({
@@ -152,6 +156,10 @@ class Home extends Component {
         }
     };
 
+    getRegionName(id) {
+        return this.state.forecast.map.features.find(x => x.properties.GSPGroupID === id)?.properties.ShortName;
+    }
+
     // we should load in the forecast data here as it can be used by multiple resources.
     render() {
         let { forecast, selectedId, selectedTime } = this.state;
@@ -159,56 +167,55 @@ class Home extends Component {
         const lastUpdated = this.state.forecast.lastUpdated !== '' ? dateformat(this.state.forecast.lastUpdated, 'dd-mm-yy hh:MM TT') : 'unknown';
 
         return (
-            <div className='container-fluid'>
-                <div className='row text-break'>
-                    <div className='col-md-5'>
-                        <div className='display-2'>
-                            Future Energy
-                        </div>
-                        <div className='display-4 text-muted'>
-                            Forecasting renewable energy.
-                        </div>
-                        <div className='h3 my-3'>
-                            Supplier region: {this.state.selectedName}
-                        </div>
-                        <div className='h3 my-3'>
-                            Next Hour: {output.toPrecision(6)} MW
-                        </div>
-                        <div className='my-3'>
-                            <p>Today is green</p>
-                        </div>
-                        <div className='my-3'>
-                            <p> last updated: {lastUpdated}</p>
-                        </div>
-                        <div className='my-3'>
-                            <p> time: {moment(selectedTime).format(this.dateformat) ?? 'loading'}</p>
-                        </div>
-                        <div  className='my-3'>
-                            <button className='btn btn-outline-primary' onClick={e => {
-                                this.setState({ isAutoplay: false });
-                            }}>Stop</button>
-                        </div>
-                        <div  className='my-3'>
-                            <button type="button" className="btn btn-outline-primary" onClick={(e) => {
+            <>
+                <div className='container-fluid'>
+                    <Header class='vh-100'/>
+                    <div className="row py-3 border-bottom border-white">
+                        <div className='col-lg-4'>
+                            <div className='d-flex flex-column h-100'>
+                                <div className='container-fluid'>
+                                    <div className='h2 text-muted'>
+                                        Forecasting renewable energy.
+                                        </div>
+                                </div>
+                                <div className='container-fluid'>
+                                <hr className='edging'></hr>
+                                    <p>
+                                        {strings.welcome_paragraph}
+                                    </p>
+                                    <p>
+                                        {strings.secondary_paragraph}
+                                    </p>
+                                    <hr className='edging'></hr>
+                                </div>
+                                <div className='container-fluid mt-auto'>
+                                    <div className='my-3'>
+                                        <p> last updated: {lastUpdated}</p>
+                                    </div>
+                                    <div className='my-3'>
+                                        <p>Time: {moment(selectedTime).format(this.dateformat) ?? 'loading'}</p>
+                                    </div>
+                                    <div className='my-3'>
+                                        Supplier region: {this.state.selectedName}
+                                    </div>
+                                    <div className='h3 my-3'>
+                                        Hourly Output: {output.toPrecision(6)} MW
+                                </div>
+                                </div>
+                            </div>
 
-                                this.resetAnimation();
 
-                            }}>Reset</button>
                         </div>
-
-                        <div className='my-4'>
-
-                            <a className='btn btn-outline-light' href='https://github.com/gwdowner/PRCO304'><strong>Github: </strong>Gwdowner/PRCO304</a>
+                        <div className='col-lg-4 mapContainer px-4'>
+                            <MapVisual callback={this.publish}></MapVisual>
                         </div>
-                    </div>
-                    <div className='col-md-4 py-3 mapContainer'>
-                        <MapVisual callback={this.publish}></MapVisual>
-                    </div>
-                    <div className='col-md-1 my-3'>
-                        <div>More visuals coming soon</div>
+                        <div className='col-lg-4 mapContainer'>
+                            <MultiLineGraph callback={this.publish} />
+                        </div>
                     </div>
                 </div>
-            </div>
+                <Footer />
+            </>
         );
     }
 }

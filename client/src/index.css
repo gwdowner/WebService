@@ -21,8 +21,57 @@ code {
 
 .mapContainer{
 
-  height: 100vh;
+  height: 80vh;
 }
+
+.footer{
+  width: 100%;
+  background-color: black;
+  color: white;
+  
+}
+
+.h5 {
+  color: #0894d1;
+}
+
+.edging {
+  background-color: white;
+  opacity: 0.5;
+}
+
+.footer .social-item {
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  
+}
+
+.footer .social-item svg {
+  max-height: 50%;
+  max-width: 50% ;
+}
+
+.linkedin {
+  background-color: #0072b1;
+}
+.logoDefualt {
+  background-color: grey;
+}
+.logoWhite {
+  color: white;
+}
+
+.header {
+  background-color: #f2a365;
+  background-position: 0% 65%;
+}
+
+.rotate {
+  animation: rotation 2s infinite linear;
+}
+
+
 
 
 

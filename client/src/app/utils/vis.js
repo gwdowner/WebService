@@ -4,6 +4,7 @@ import React, {Component} from 'react';
 export default class Vis extends Component{
     componentDidMount(){
         this.props.draw(this.props.props);
+        window.addEventListener('resize', this.componentResize.bind(this));
     }
 
     componentDidUpdate(){
@@ -11,7 +12,16 @@ export default class Vis extends Component{
     }
 
     shouldComponentUpdate(nextProps){
-        return true;
+        return false;
+    }
+
+    componentWillUnmount(){
+        window.removeEventListener('resize',this.componentResize.bind(this));
+    }
+    
+    componentResize(){
+        console.log('in resize');
+        this.props.draw(this.props.props);
     }
 
     render(){

@@ -351,3 +351,4 @@ MigrationBackup/
 .env
 .nyc_output/**
 coverage/**
+production.env

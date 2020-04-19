@@ -34,8 +34,31 @@ function sortDataByDate(data){
     return orderedDates;
 }
 
+const getDateRange = (data)=>{
+    let fullData = sortDataByDate(data);
+
+    let reducedDates = fullData.reduce((prev, curr)=>{
+        if(!prev.includes(curr.time)){
+            prev.push(curr.time);
+        }
+
+        return prev;
+    }, []);
+
+    return reducedDates;
+};
+
+const getAllValues = (data)=>{
+    return data.reduce((accum, d)=>{
+        accum.push(...d.forecast);
+        return accum;
+    }, []);
+};
+
 export default {
     getStart,
     getEnd,
-    getOutput
+    getOutput,
+    getDateRange,
+    getAllValues
 }

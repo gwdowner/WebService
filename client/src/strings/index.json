@@ -1,0 +1,5 @@
+{
+    "welcome_paragraph":"Welcome to Future-Energy, the focus of this project is to leverage existing data about renewable energy (solar and wind) to forecast short term future output.",
+    "secondary_paragraph":"This project uses a microservice architecture, Data has been made avalible through a series of API endpoints for each service to allow entensibility.Below is the forecast for the next few days, this dashboard represents a client friendly frontend to consume data through visual aids.",
+    "footer_about":"Final Year Project produced by George Downer as part of my Computer Science Degree at the University of Plymouth."
+}
