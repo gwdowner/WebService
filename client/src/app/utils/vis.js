@@ -16,7 +16,7 @@ export default class Vis extends Component{
     }
 
     componentWillUnmount(){
-        window.removeEventListener('resize',this.componentResize.bind(this));
+        window.removeEventListener('resize',this.componentResize);
     }
     
     componentResize(){
