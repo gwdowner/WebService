@@ -2,9 +2,15 @@ import React, {Component} from 'react';
 
 /// This is a helper class to bridge the gap between react and d3
 export default class Vis extends Component{
+    constructor(){
+        super()
+
+        this.componentResize = this.componentResize.bind(this);
+    }
+
     componentDidMount(){
         this.props.draw(this.props.props);
-        window.addEventListener('resize', this.componentResize.bind(this));
+        window.addEventListener('resize', this.componentResize);
     }
 
     componentDidUpdate(){
@@ -20,7 +26,6 @@ export default class Vis extends Component{
     }
     
     componentResize(){
-        console.log('in resize');
         this.props.draw(this.props.props);
     }
 

@@ -32,6 +32,10 @@ class Home extends Component {
             selectedTime: null,
             isAutoplay: true
         };
+        
+        this.startAnimation = this.startAnimation.bind(this);
+        this.resetAnimation = this.resetAnimation.bind(this);
+        this.getRegionName = this.getRegionName.bind(this);
     }
 
     componentDidMount() {
