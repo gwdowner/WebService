@@ -169,6 +169,9 @@ class Home extends Component {
         let { forecast, selectedId, selectedTime } = this.state;
         const output = dataUtils.getOutput(forecast.forecast, selectedId, selectedTime) ?? 0;
         const lastUpdated = this.state.forecast.lastUpdated !== '' ? dateformat(this.state.forecast.lastUpdated, 'dd-mm-yy hh:MM TT') : 'unknown';
+        const usage = strings.suggested_usage.map((item, index)=>{
+            return <li key={index}>{item}</li> 
+        })
 
         return (
             <>
@@ -190,6 +193,10 @@ class Home extends Component {
                                     <p>
                                         {strings.secondary_paragraph}
                                     </p>
+                                    
+                                        <ul >
+                                            {usage}
+                                        </ul> 
                                     <hr className='edging'></hr>
                                 </div>
                                 <div className='container-fluid mt-auto'>
