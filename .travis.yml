@@ -4,6 +4,7 @@ node_js:
 services:
   - docker
 install:
+  - echo TRAVIS_COMMIT
   - ls
   - npm build
   - docker build -t gwdowner/webservice:latest .
