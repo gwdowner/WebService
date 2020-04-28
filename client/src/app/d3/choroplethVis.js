@@ -94,7 +94,8 @@ async function draw(props) {
     const y_offset = (maxy * scale);
     const x_offset = -(minx * scale);
 
-    let domain = d3.extent(dataUtils.getAllValues(data), d=> d.solarMW);
+    let domain = d3.extent(dataUtils.getAllValues(data,false), d=> d.solarMW);
+   
     colour = colourFactory(domain);
 
     path.projection(AffineTransformation(scale, 0, 0, -scale, x_offset, y_offset));

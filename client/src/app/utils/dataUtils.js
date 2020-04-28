@@ -48,9 +48,12 @@ const getDateRange = (data)=>{
     return reducedDates;
 };
 
-const getAllValues = (data)=>{
+const getAllValues = (data, inclNational=true)=>{
     return data.reduce((accum, d)=>{
-        accum.push(...d.forecast);
+        if(inclNational || d.region !== 0){
+            accum.push(...d.forecast);
+        }
+        
         return accum;
     }, []);
 };
