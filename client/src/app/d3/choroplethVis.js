@@ -4,7 +4,7 @@ import dataUtils from '../utils/dataUtils';
 
 const colourFactory = (domain) => d3
     .scaleLinear().domain(domain)
-    .range(['#99e699', '#33cc33']);
+    .range(['#c5fad4', '#00a32c']);
 
 let colour = colourFactory(0, 4000);
 
