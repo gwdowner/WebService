@@ -30,6 +30,6 @@ export default class Vis extends Component{
     }
 
     render(){
-        return <div id={this.props.props.element} className="vis"></div>
+        return <div id={this.props.props.element} className="h-100"></div>
     }
 }

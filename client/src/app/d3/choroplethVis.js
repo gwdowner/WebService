@@ -101,12 +101,12 @@ async function draw(props) {
     path.projection(AffineTransformation(scale, 0, 0, -scale, x_offset, y_offset));
 
     d3.select(elementId).select('svg').remove();
-
+  
     let selection = d3
         .select(elementId)
         .append('svg')
-        .style('width', SVGwidth)
-        .style('height', SVGheight)
+        .style('width', `${SVGwidth}px`)
+        .style('height', `${SVGheight}px`)
         .append('g')
         .selectAll('path')
         .data(mapJson.features);
