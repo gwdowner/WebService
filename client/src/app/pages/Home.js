@@ -32,7 +32,7 @@ class Home extends Component {
             selectedTime: null,
             isAutoplay: true
         };
-        
+
         this.startAnimation = this.startAnimation.bind(this);
         this.resetAnimation = this.resetAnimation.bind(this);
         this.getRegionName = this.getRegionName.bind(this);
@@ -169,15 +169,15 @@ class Home extends Component {
         let { forecast, selectedId, selectedTime } = this.state;
         const output = dataUtils.getOutput(forecast.forecast, selectedId, selectedTime) ?? 0;
         const lastUpdated = this.state.forecast.lastUpdated !== '' ? dateformat(this.state.forecast.lastUpdated, 'dd-mm-yy hh:MM TT') : 'unknown';
-        const usage = strings.suggested_usage.map((item, index)=>{
-            return <li key={index}>{item}</li> 
+        const usage = strings.suggested_usage.map((item, index) => {
+            return <li key={index}>{item}</li>
         })
 
         return (
             <>
                 <div className='container-fluid'>
-                    <Header class='vh-100'/>
-                    <div className="row py-3 border-bottom border-white main">
+                    <Header class='vh-100' />
+                    <div className="row py-3 border-bottom border-top border-white main" id='main'>
                         <div className='col-lg-4'>
                             <div className='d-flex flex-column h-100'>
                                 <div className='container-fluid'>
@@ -186,17 +186,16 @@ class Home extends Component {
                                         </div>
                                 </div>
                                 <div className='container-fluid'>
-                                <hr className='edging'></hr>
+                                    <hr className='edging'></hr>
                                     <p>
                                         {strings.welcome_paragraph}
                                     </p>
                                     <p>
                                         {strings.secondary_paragraph}
                                     </p>
-                                    
-                                        <ul >
-                                            {usage}
-                                        </ul> 
+                                    <ul >
+                                        {usage}
+                                    </ul>
                                     <hr className='edging'></hr>
                                 </div>
                                 <div className='container-fluid mt-auto'>
@@ -214,8 +213,6 @@ class Home extends Component {
                                 </div>
                                 </div>
                             </div>
-
-
                         </div>
                         <div className='col-lg-4 mapContainer px-4'>
                             <MapVisual callback={this.publish}></MapVisual>
