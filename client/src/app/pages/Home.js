@@ -129,6 +129,9 @@ class Home extends Component {
                     time_listeners: [...prevState.time_listeners, payload]
                 }));
                 break;
+            case 'GET_OUTPUT':
+                return dataUtils.getOutput(this.state.forecast.forecast, this.state.selectedId, this.state.selectedTime) ?? 0;
+                
             default:
                 break;
         }
@@ -215,7 +218,7 @@ class Home extends Component {
                             </div>
                         </div>
                         <div className='col-lg-4 mapContainer px-4'>
-                            <MapVisual callback={this.publish}></MapVisual>
+                            <MapVisual callback={this.publish} output={output}></MapVisual>
                         </div>
                         <div className='col-lg-4 mapContainer'>
                             <MultiLineGraph callback={this.publish} />

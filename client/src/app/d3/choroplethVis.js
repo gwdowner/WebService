@@ -8,6 +8,11 @@ const colourFactory = (domain) => d3
 
 let colour = colourFactory(0, 4000);
 
+
+const tooltip = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+
 function AffineTransformation(a, b, c, d, tx, ty) {
     return {
         //overrides normal D3 projection stream (to avoid adaptive sampling)
@@ -37,6 +42,15 @@ function mouseOverFactory(callback) {
             .style("opacity", 1)
             .style("stroke", "white");
 
+        let output = callback({
+            type: 'GET_OUTPUT'
+        });
+        
+        tooltip.html(d.properties.ShortName + "<br/>" +output.toPrecision(6) + "MW")
+            .style("left", (d3.event.pageX) + "px")
+            .style("top", (d3.event.pageY - 28) + "px")
+            .style("opacity", 1);
+
         let res = {
             type: 'SELECTED_COUNTY',
             payload: d.properties.GSPGroupID
@@ -58,6 +72,8 @@ function mouseLeaveFactory(callback) {
             .transition()
             .duration(1)
             .style("opacity", .8);
+
+        tooltip.style("opacity", 0);
 
         let res = {
             type: 'SELECTED_COUNTY',
@@ -94,14 +110,15 @@ async function draw(props) {
     const y_offset = (maxy * scale);
     const x_offset = -(minx * scale);
 
-    let domain = d3.extent(dataUtils.getAllValues(data,false), d=> d.solarMW);
-   
+    let domain = d3.extent(dataUtils.getAllValues(data, false), d => d.solarMW);
+
     colour = colourFactory(domain);
 
     path.projection(AffineTransformation(scale, 0, 0, -scale, x_offset, y_offset));
 
     d3.select(elementId).select('svg').remove();
-  
+
+
     let selection = d3
         .select(elementId)
         .append('svg')
