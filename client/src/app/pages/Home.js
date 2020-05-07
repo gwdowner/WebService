@@ -80,6 +80,12 @@ class Home extends Component {
 
     }
 
+    stopAnimation() {
+        this.setState({
+            isAutoplay: false
+        });
+    }
+
     startAnimation(forceRestart = false) {
 
         const timeout = 750;
@@ -98,6 +104,12 @@ class Home extends Component {
 
             this.setState({
                 selectedTime: nextTime,
+            });
+        }
+
+        if (forceRestart) {
+            this.setState({
+                isAutoplay: true
             });
         }
 
@@ -131,7 +143,7 @@ class Home extends Component {
                 break;
             case 'GET_OUTPUT':
                 return dataUtils.getOutput(this.state.forecast.forecast, this.state.selectedId, this.state.selectedTime) ?? 0;
-                
+
             default:
                 break;
         }
@@ -193,12 +205,7 @@ class Home extends Component {
                                     <p>
                                         {strings.welcome_paragraph}
                                     </p>
-                                    <p>
-                                        {strings.secondary_paragraph}
-                                    </p>
-                                    <ul >
-                                        {usage}
-                                    </ul>
+
                                     <hr className='edging'></hr>
                                 </div>
                                 <div className='container-fluid mt-auto'>
@@ -213,11 +220,15 @@ class Home extends Component {
                                     </div>
                                     <div className='h3 my-3'>
                                         Hourly Output: {output.toPrecision(6)} MW
-                                </div>
+                                    </div>
+                                    <div className='d-flex my-3'>
+                                        <button className='btn btn-outline-light mx-auto' onClick={this.state.isAutoplay ? () => { this.stopAnimation() } : () => { this.startAnimation(true) }}> {this.state.isAutoplay ? "Stop Animation" : "Start Animation"}</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div className='col-lg-4 mapContainer px-4'>
+
                             <MapVisual callback={this.publish} output={output}></MapVisual>
                         </div>
                         <div className='col-lg-4 mapContainer'>
