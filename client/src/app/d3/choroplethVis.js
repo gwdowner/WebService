@@ -42,20 +42,23 @@ function mouseOverFactory(callback) {
             .style("opacity", 1)
             .style("stroke", "white");
 
+      
+        
+        let res = {
+            type: 'SELECTED_COUNTY',
+            payload: d.properties.GSPGroupID
+        }
+        callback(res);
         let output = callback({
             type: 'GET_OUTPUT'
         });
+
         
         tooltip.html(d.properties.ShortName + "<br/>" +output.toPrecision(6) + "MW")
             .style("left", (d3.event.pageX) + "px")
             .style("top", (d3.event.pageY - 28) + "px")
             .style("opacity", 1);
 
-        let res = {
-            type: 'SELECTED_COUNTY',
-            payload: d.properties.GSPGroupID
-        }
-        callback(res);
     }
 
     return mouseOver
